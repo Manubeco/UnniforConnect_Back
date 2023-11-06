@@ -13,7 +13,8 @@ MyCursor = MyConnection.cursor()
 
 # UPDATE (Renomear Grupo)
 novoNome = "Segurança da informação"
-renomearGrupo = f'UPDATE Curso SET NomeCurso = "{novoNome}" WHERE IdCurso = 4'
+getIdGrupo = int(input())
+renomearGrupo = f'UPDATE Grupo SET Descricao = "{novoNome}" WHERE IdGrupo = {getIdGrupo}'
 MyCursor.execute(renomearGrupo)
 MyConnection.commit()
 

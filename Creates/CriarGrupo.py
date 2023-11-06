@@ -16,8 +16,9 @@ MyCursor = MyConnection.cursor()
 # resultado = MyCursor.fetchall() ||| Ler o banco de dados
 
 # CREATE (Criar Curso)
-nameCurso = "Ciências da computação"
-criarCurso = f'INSERT INTO Curso (NomeCurso) VALUE ("{nameCurso}")'
+getNomeGrupo = input()
+getIdDiscilplina = int(input())
+criarCurso = f'INSERT INTO Grupo (descricao, iddisciplina) VALUE ("{getNomeGrupo}",{getIdDiscilplina})'
 MyCursor.execute(criarCurso)
 MyConnection.commit()
 
