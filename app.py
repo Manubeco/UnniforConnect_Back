@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from bd import MyDb
-import Reads
-import Creates
+import Reads.Gets
+import Creates.Posts
 
 app = Flask(__name__)
 
@@ -23,14 +23,17 @@ def consultaAlunos (getIdGrupo):
 @app.route('/grupo/<int:getIdGrupo>',methods=['GET'])
 def consultaMensagens (getIdGrupo):
     consulta = Reads.Gets.listarMensagens(getIdGrupo)
+
     return consulta
 
 # ---------------------------- PATH GETS ----------------------------------
 
-@app.route('/grupo/<int:getIdGrupo>',methods=['GET'])
-def criarGrupo (getIdGrupo):
-    escrita = Creates.Posts.criarGrupos(getIdGrupo)
-    return consulta
+@app.route('/grupo',methods=['POST'])
+def criarGrupo():
+    dados = request.json
+
+    escrita = Creates.Posts.criarGrupos(dados)
+    return escrita
 
 
 app.run(port=5000,host='localhost',debug=True)

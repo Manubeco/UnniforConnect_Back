@@ -5,12 +5,14 @@ app = Flask(__name__)
 
 # Função para listar todos os grupos de uma disciplina
 # Recebe o Id da disciplina pelo URL e retorna todos os grupos
-def criarGrupos(getNomeGrupo,getIdDisciplina):
+def criarGrupos(dados):
     myCursor = MyDb.cursor()
 
-    postGrupo = f'INSERT INTO Grupo (descricao, iddisciplina) VALUE ("{getNomeGrupo}",{getIdDisciplina})'
+    postGrupo = f"INSERT INTO Grupo (descricao, iddisciplina) VALUES ('{getNomeGrupo}',{getIdDisciplina})"
     myCursor.execute(postGrupo)
     MyDb.commit()
+
+    return ("Grupo criado com sucesso")
 
 # Função para listar todos os alunos de um grupo
 # Recebe o Id do grupo pelo URL e retorna todos os alunos
