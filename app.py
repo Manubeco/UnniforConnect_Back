@@ -32,10 +32,8 @@ def consultaMensagens (getIdGrupo):
 @app.route('/grupo',methods=['POST'])
 def criarGrupo():
     dados = request.json
-    lerJson = json.load(dados)
-    idD = lerJson['IdDisciplina']
-    nomeGrupo = lerJson['NomeGrupo']
-    idD = int(idD)
+    idD = int(dados[0]["IdDisciplina"])
+    nomeGrupo = str(dados[0]["NomeGrupo"])
 
     escrita = Creates.Posts.criarGrupos(idD,nomeGrupo)
     return escrita

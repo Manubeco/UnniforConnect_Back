@@ -10,8 +10,10 @@ app = Flask(__name__)
 def criarGrupos(idD,nomeGrupo):
     myCursor = MyDb.cursor()
 
-    postGrupo = f"INSERT INTO Grupo (Descricao, IdDisciplina) VALUES ({nomeGrupo},{idD})"
-    myCursor.execute(postGrupo)
+    valores = (idD,nomeGrupo)
+
+    postGrupo = f"INSERT INTO Grupo (Descricao, IdDisciplina) VALUES (%nomeGrupo,%idD)"
+    myCursor.execute(postGrupo,valores)
     MyDb.commit()
 
     return ("Grupo criado com sucesso")
