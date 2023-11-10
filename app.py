@@ -1,10 +1,48 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,session,redirect,url_for
 from bd import MyDb
-import json
+from auth import Autenticacao
 import Reads.Gets
 import Creates.Posts
 
 app = Flask(__name__)
+app.secret_key = 'testando'
+
+
+ # --------------- Autenticacao-------------------
+#
+# autenticacao = Autenticacao()
+#
+# @app.route('/login', methods=['POST'])
+# def login():
+#     dados = request.json
+#     matricula = dados.get("Matricula")
+#     senha = dados.get("Senha")
+#
+#     if autenticacao.login(matricula, senha):
+#         session['matricula'] = matricula
+#         return jsonify({"mensagem": "Login bem-sucedido!"})
+#     else:
+#         return jsonify({"mensagem": "Usuário ou senha incorretos"}), 401
+#
+# @app.route('/logout', methods=['POST'])
+# def logout():
+#     autenticacao.logout()
+#     session.pop('matricula', None)
+#     return jsonify({"mensagem": "Logout bem-sucedido!"})
+#
+# @app.route('/restrito', methods=['GET'])
+# def rota_restrita():
+#     if 'matricula' in session:
+#         return jsonify({"mensagem": "Conteúdo restrito. Você está logado!"})
+#     else:
+#         return jsonify({"mensagem": "Acesso não autorizado"}), 401
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+
+
+
 
 # ---------------------------- PATH GETS ----------------------------------
 
@@ -38,5 +76,23 @@ def criarGrupo():
     escrita = Creates.Posts.criarGrupos(idD,nomeGrupo)
     return escrita
 
+@app.route('/entrar',methods=['POST'])
+def entrarGrupo():
+    dados = request.json
+    idG = int(dados[0]["IdGrupo"])
+    matriculaAluno = int(dados[0]["Matricula"])
+
+    escrita = Creates.Posts.entrarGrupos(idG,matriculaAluno)
+    return escrita
+
+@app.route('/grupo/chat',methods=['POST'])
+def enviarMensagem():
+    dados = request.json
+    idG = int(dados[0]["IdGrupo"])
+    matriculaAluno = int(dados[0]["Matricula"])
+    mensagem = dados[0]["Mensagem"]
+
+    escrita = Creates.Posts.enviarMensagens(idG,matriculaAluno,mensagem)
+    return escrita
 
 app.run(port=5000,host='localhost',debug=True)

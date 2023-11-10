@@ -8,7 +8,7 @@ app = Flask(__name__)
 def listarGrupos(getIdDisciplina):
     myCursor = MyDb.cursor()
 
-    listarGrupos = (f'SELECT Grupo.Descricao,NomeDisciplina.Descricao from Grupo '
+    listarGrupos = (f'SELECT Grupo.IdGrupo,Grupo.Descricao,NomeDisciplina.Descricao from Grupo '
                     f'inner join Disciplina as NomeDisciplina on Grupo.IdDisciplina = NomeDisciplina.IdDisciplina '
                     f'where Grupo.IdDisciplina = {getIdDisciplina}')
     myCursor.execute(listarGrupos)

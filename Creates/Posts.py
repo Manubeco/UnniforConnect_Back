@@ -1,5 +1,5 @@
 import json
-
+from datetime import datetime
 from flask import Flask, jsonify, request
 from bd import MyDb
 
@@ -10,33 +10,61 @@ app = Flask(__name__)
 def criarGrupos(idD,nomeGrupo):
     myCursor = MyDb.cursor()
 
-    valores = (idD,nomeGrupo)
+    postGrupo = f"INSERT INTO Grupo (Descricao, IdDisciplina) VALUES (%s,%s)"
+    valores = (nomeGrupo,idD)
 
-    postGrupo = f"INSERT INTO Grupo (Descricao, IdDisciplina) VALUES (%nomeGrupo,%idD)"
     myCursor.execute(postGrupo,valores)
     MyDb.commit()
 
     return ("Grupo criado com sucesso")
 
 #
-# def listarAlunos_Grupo(getIdGrupo):
-#     myCursor = MyDb.cursor()
 #
-#     listarAlunos = (f'select Descricao, NomeAluno.NomeAluno from Aluno_Grupo '
-#                     f'inner join Aluno as NomeAluno on Aluno_Grupo.IdAluno = NomeAluno.IdAluno '
-#                     f'inner join Grupo as NomeGrupo on Aluno_Grupo.IdGrupo = NomeGrupo.IdGrupo '
-#                     f'where Aluno_Grupo.IdGrupo = {getIdGrupo}')
-#     myCursor.execute(listarAlunos)
-#     resultado = myCursor.fetchall()
-#     return jsonify(resultado)
+def entrarGrupos(idG,matriculaAluno):
+    myCursor = MyDb.cursor()
+
+    getIdAluno = f'select idAluno from Aluno where Matricula = %s'
+    myCursor.execute(getIdAluno,(matriculaAluno,))
+    idAluno = myCursor.fetchone()
+
+    if idAluno:
+        idAluno = idAluno[0]
+
+        alocarGrupo = f'insert into Aluno_Grupo (IdAluno, IdGrupo) values (%s,%s)'
+        valores = (idAluno,idG)
+
+        myCursor.execute(alocarGrupo, valores)
+        MyDb.commit()
+        return jsonify("Você entrou no grupo!")
+
+    else:
+        return jsonify("Aluno não encontrado")
+
 #
 #
-# def listarMensagens(getIdGrupo):
-#     myCursor = MyDb.cursor()
-#
-#     listarMensagens = (f'select Aluno.NomeAluno, Conteudo, DataEnvio from Mensagens '
-#                        f'inner join Aluno on Mensagens.IdAluno = Aluno.IdAluno '
-#                        f'where IdGrupo = {getIdGrupo} order by DataEnvio;')
-#     myCursor.execute(listarMensagens)
-#     resultado = myCursor.fetchall()
-#     return jsonify(resultado)
+def enviarMensagens(idG,matriculaAluno,mensagem):
+    myCursor = MyDb.cursor()
+
+    getIdAluno = f'select idAluno from Aluno where Matricula = %s'
+    myCursor.execute(getIdAluno, (matriculaAluno,))
+    idAluno = myCursor.fetchone()
+
+    if idAluno:
+        idAluno = idAluno[0]
+
+        getDataEnvio = datetime.now()
+        enviarMensagem = f'insert into Mensagens (IdAluno, IdGrupo,Conteudo,DataEnvio) values (%s,%s,%s,%s)'
+        valores =  (idAluno,idG,mensagem,getDataEnvio)
+
+        myCursor.execute(enviarMensagem, valores)
+        MyDb.commit()
+
+        return jsonify("Mensagem enviada!")
+
+    else:
+        return jsonify("Um erro aconteceu")
+
+
+    myCursor.execute(enviarMensagem)
+
+
