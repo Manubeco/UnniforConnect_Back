@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request,session,redirect,url_for
 import Reads.Gets
 import Creates.Posts
 import auth
+import hashlib 
 
 app = Flask(__name__)
 app.secret_key = 'testando'
@@ -14,17 +15,17 @@ app.secret_key = 'testando'
 @app.route('/login', methods=['POST'])
 def efetuarLogin():
     dados = request.json
-    if request.method == 'POST' and 'Matricula' in dados[0]["Matricula"] and 'Senha' in dados[0]["Senha"]:
-        matriculaAluno = int(dados[0]["Matricula"])
-        senha = int(dados[0]["Senha"])
+    if dados["Matricula"] != None and dados["Senha"] != None:
+        matriculaAluno = int(dados["Matricula"])
+        senha = dados["Senha"]
 
         hash = senha + app.secret_key
-        hash = senha.sha1(hash.encode())
+        hash = hashlib.sha1(hash.encode())
         senha = hash.hexdigest()
 
-        escrita = auth.Autenticacao.login(matriculaAluno, senha)
+        escrita = auth.Autenticacao().login(matriculaAluno, senha)
         return escrita
-
+    return jsonify({'status': 'error'})
 # ---------------------------- PATH GETS ----------------------------------
 
 # Passar Id da disciplina no URL
