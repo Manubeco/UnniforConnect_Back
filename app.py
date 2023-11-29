@@ -1,8 +1,7 @@
 from flask import Flask, jsonify, request,session,redirect,url_for
-from bd import MyDb
-from auth import Autenticacao
 import Reads.Gets
 import Creates.Posts
+import auth
 
 app = Flask(__name__)
 app.secret_key = 'testando'
@@ -12,37 +11,19 @@ app.secret_key = 'testando'
 #
 # autenticacao = Autenticacao()
 #
-# @app.route('/login', methods=['POST'])
-# def login():
-#     dados = request.json
-#     matricula = dados.get("Matricula")
-#     senha = dados.get("Senha")
-#
-#     if autenticacao.login(matricula, senha):
-#         session['matricula'] = matricula
-#         return jsonify({"mensagem": "Login bem-sucedido!"})
-#     else:
-#         return jsonify({"mensagem": "Usuário ou senha incorretos"}), 401
-#
-# @app.route('/logout', methods=['POST'])
-# def logout():
-#     autenticacao.logout()
-#     session.pop('matricula', None)
-#     return jsonify({"mensagem": "Logout bem-sucedido!"})
-#
-# @app.route('/restrito', methods=['GET'])
-# def rota_restrita():
-#     if 'matricula' in session:
-#         return jsonify({"mensagem": "Conteúdo restrito. Você está logado!"})
-#     else:
-#         return jsonify({"mensagem": "Acesso não autorizado"}), 401
-#
-# if __name__ == '__main__':
-#     app.run(debug=True)
+@app.route('/login', methods=['POST'])
+def efetuarLogin():
+    dados = request.json
+    if request.method == 'POST' and 'Matricula' in dados[0]["Matricula"] and 'Senha' in dados[0]["Senha"]:
+        matriculaAluno = int(dados[0]["Matricula"])
+        senha = int(dados[0]["Senha"])
 
+        hash = senha + app.secret_key
+        hash = senha.sha1(hash.encode())
+        senha = hash.hexdigest()
 
-
-
+        escrita = auth.Autenticacao.login(matriculaAluno, senha)
+        return escrita
 
 # ---------------------------- PATH GETS ----------------------------------
 
