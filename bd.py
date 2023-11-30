@@ -2,9 +2,9 @@ import mysql.connector
 
 # ClASSE PARA CONEXÃO COM O BANCO DE DADOS
 MyDb = mysql.connector.connect(
-    host="roundhouse.proxy.rlwy.net",
-    port="47637",
+    host="monorail.proxy.rlwy.net",
+    port="50094",
     user="root",
-    password="AhcdF-Ch6BGh21Af6hAc2-FD51Hbca2d",
+    password="e46-Gcc5EFA-5gcad-gdfaB2Gha446F-",
     database="railway",
    )

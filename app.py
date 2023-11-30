@@ -15,17 +15,17 @@ app.secret_key = 'testando'
 @app.route('/login', methods=['POST'])
 def efetuarLogin():
     dados = request.json
-    if dados["Matricula"] != None and dados["Senha"] != None:
-        matriculaAluno = int(dados["Matricula"])
-        senha = dados["Senha"]
-
-        hash = senha + app.secret_key
-        hash = hashlib.sha1(hash.encode())
-        senha = hash.hexdigest()
+    if dados[0]["Matricula"] != None and dados[0]["Senha"] != None:
+        matriculaAluno = int(dados[0]["Matricula"])
+        senha = dados[0]["Senha"]
 
         escrita = auth.Autenticacao().login(matriculaAluno, senha)
         return escrita
     return jsonify({'status': 'error'})
+
+@app.route('/logout', methods=['POST'])
+def efetuarLogout():
+    return auth.Autenticacao().logout()
 # ---------------------------- PATH GETS ----------------------------------
 
 # Passar Id da disciplina no URL

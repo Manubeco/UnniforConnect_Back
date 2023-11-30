@@ -13,8 +13,7 @@ class Autenticacao:
         if account:
             # Cria uma sessão, podemos acessar esses dados em outras rotas
             session['loggedin'] = True
-            session['id'] = account['id']
-            session['Matricula'] = account['Matricula']
+            session['Matricula'] = matricula
 
             return 'Você entrou com sucesso!'
         else:
@@ -24,7 +23,6 @@ class Autenticacao:
     def logout(self):
 
         session.pop('loggedin', None)
-        session.pop('id', None)
         session.pop('Matricula', None)
 
         return jsonify("Você saiu com sucesso!")
